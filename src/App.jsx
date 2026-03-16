@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -8,7 +8,6 @@ import {
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
-import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Cabs from "./pages/Cabs";
 import Events from "./pages/Events";

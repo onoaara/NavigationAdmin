@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import {
   collection,
@@ -16,7 +16,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   Typography,
   IconButton,
   TextField,
@@ -105,7 +104,7 @@ const Users = () => {
   const filteredUsers = users.filter((user) =>
     `${user.firstName} ${user.lastName}`
       .toLowerCase()
-      .includes(searchQuery.toLowerCase())
+      .includes(searchQuery.toLowerCase()),
   );
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import { collection, addDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -19,7 +19,7 @@ const AddUserModal = ({ open, onClose, onAddUser }) => {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       const user = userCredential.user;
       await addDoc(collection(db, "userDetails"), {

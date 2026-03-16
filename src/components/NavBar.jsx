@@ -1,4 +1,3 @@
-import React from "react";
 import { AppBar, Toolbar, Typography, IconButton, Avatar } from "@mui/material";
 import "./Navbar.css";
 

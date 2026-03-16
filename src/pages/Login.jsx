@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -70,9 +70,6 @@ const Login = ({ setAuthenticated }) => {
             Login
           </Button>
         </form>
-        <Typography variant="body2" align="center" className="signup-text">
-          Don't have an account? <a href="#">Sign Up</a>
-        </Typography>
       </Box>
     </div>
   );

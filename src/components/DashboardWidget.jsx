@@ -1,4 +1,3 @@
-import React from "react";
 import "./DashboardWidget.css";
 
 const DashboardWidget = ({ title, value }) => {

@@ -1,0 +1,17 @@
+.popular-places-page {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+.place-form {
+  margin-top: 20px;
+  max-width: 500px;
+}
+
+.places-grid {
+  margin-top: 20px;
+}
+
+.place-card {
+  padding: 20px;
+}

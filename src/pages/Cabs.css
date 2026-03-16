@@ -1,0 +1,80 @@
+.cabs-page {
+  padding: 20px;
+  margin-left: 250px;
+}
+
+.cabs-page h2 {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-add-container {
+  display: flex;
+  gap: 10px;
+}
+
+.add-cab-button {
+  margin-left: auto;
+}
+
+.search-bar {
+  margin-right: 20px;
+  width: 300px;
+}
+
+.cabs-grid {
+  padding-top: 20px;
+}
+
+.cab-card {
+  max-width: 345px;
+  margin: auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cab-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cab-image {
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.card-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.cab-card .MuiCardContent-root {
+  padding: 20px;
+}
+
+.cab-card .MuiTypography-h5 {
+  font-weight: bold;
+}
+
+.cab-card .MuiTypography-body2 {
+  color: #555;
+}
+
+.cab-card .MuiButton-root {
+  margin-top: 10px;
+  width: 48%;
+}
+
+.cab-card .MuiButton-containedPrimary {
+  background-color: #1976d2;
+}
+
+.cab-card .MuiButton-containedSecondary {
+  background-color: #d32f2f;
+}

@@ -1,0 +1,307 @@
+import React, { useEffect, useState } from "react";
+import { db, storage } from "../firebase";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Grid,
+  Button,
+  Modal,
+  Box,
+  TextField,
+  CircularProgress,
+} from "@mui/material";
+import "./Cabs.css";
+
+const Cabs = () => {
+  const [cabs, setCabs] = useState([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentCab, setCurrentCab] = useState(null);
+
+  useEffect(() => {
+    const fetchCabsData = async () => {
+      const cabsCollection = collection(db, "cabs");
+      const cabsSnapshot = await getDocs(cabsCollection);
+      const cabsList = cabsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCabs(cabsList);
+    };
+
+    fetchCabsData();
+  }, []);
+
+  const handleAddCab = async (cab) => {
+    const cabsCollection = collection(db, "cabs");
+    await addDoc(cabsCollection, cab);
+    const cabsSnapshot = await getDocs(cabsCollection);
+    const cabsList = cabsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setCabs(cabsList);
+    setIsAddModalOpen(false);
+  };
+
+  const handleEditCab = async (updatedCab) => {
+    const cabDoc = doc(db, "cabs", currentCab.id);
+    await updateDoc(cabDoc, updatedCab);
+    const cabsSnapshot = await getDocs(collection(db, "cabs"));
+    const cabsList = cabsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setCabs(cabsList);
+    setIsEditModalOpen(false);
+  };
+
+  const handleDeleteCab = async (cabId) => {
+    await deleteDoc(doc(db, "cabs", cabId));
+    const cabsSnapshot = await getDocs(collection(db, "cabs"));
+    const cabsList = cabsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setCabs(cabsList);
+  };
+
+  return (
+    <div className="cabs-page">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2>Cabs</h2>
+        <Button
+          className="add-cab-button"
+          variant="contained"
+          color="primary"
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          Add Cab
+        </Button>
+      </div>
+      <Grid container spacing={3} className="cabs-grid">
+        {cabs.map((cab) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={cab.id}>
+            <Card className="cab-card">
+              <CardMedia
+                component="img"
+                height="200"
+                image={cab.image}
+                alt={cab.name}
+                className="cab-image"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {cab.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Phone: {cab.phoneNumber}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Car Model: {cab.carModel}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Plate Number: {cab.plateNumber}
+                </Typography>
+                <div className="card-buttons">
+                  <Button
+                    size="small"
+                    color="primary"
+                    variant="contained"
+                    onClick={() => {
+                      setCurrentCab(cab);
+                      setIsEditModalOpen(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="small"
+                    color="secondary"
+                    variant="contained"
+                    onClick={() => handleDeleteCab(cab.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      <AddEditCabModal
+        open={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddCab}
+        title="Add Cab"
+      />
+      <AddEditCabModal
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleEditCab}
+        initialData={currentCab}
+        title="Edit Cab"
+      />
+    </div>
+  );
+};
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+const AddEditCabModal = ({
+  open,
+  onClose,
+  onSubmit,
+  initialData = {},
+  title,
+}) => {
+  const [cab, setCab] = useState({
+    name: "",
+    phoneNumber: "",
+    carModel: "",
+    plateNumber: "",
+    image: "",
+    ...initialData,
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCab({
+      ...cab,
+      [name]: value,
+    });
+  };
+
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsUploading(true);
+    if (imageFile) {
+      const imageRef = ref(storage, `cabs/${imageFile.name}`);
+      await uploadBytes(imageRef, imageFile);
+      const imageUrl = await getDownloadURL(imageRef);
+      cab.image = imageUrl;
+    }
+    onSubmit(cab);
+    setIsUploading(false);
+    onClose();
+    setCab({
+      name: "",
+      phoneNumber: "",
+      carModel: "",
+      plateNumber: "",
+      image: "",
+    });
+    setImageFile(null);
+  };
+
+  return (
+    <Modal open={open} onClose={onClose}>
+      <Box sx={modalStyle}>
+        <Typography variant="h6" component="h2">
+          {title}
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Name"
+            name="name"
+            value={cab.name}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Phone Number"
+            name="phoneNumber"
+            value={cab.phoneNumber}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+            inputMode="tel"
+          />
+          <TextField
+            label="Car Model"
+            name="carModel"
+            value={cab.carModel}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Plate Number"
+            name="plateNumber"
+            value={cab.plateNumber}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <Button
+            variant="contained"
+            component="label"
+            fullWidth
+            margin="normal"
+            sx={{ mt: 2 }}
+          >
+            Upload Image
+            <input type="file" hidden onChange={handleImageChange} />
+          </Button>
+          {isUploading && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+              <CircularProgress />
+            </Box>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+            disabled={isUploading}
+          >
+            Submit
+          </Button>
+        </form>
+      </Box>
+    </Modal>
+  );
+};
+
+export default Cabs;

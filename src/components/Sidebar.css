@@ -1,0 +1,33 @@
+.sidebar {
+  width: 250px;
+  background-color: #3f51b5;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  background-color: #2c387e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo {
+  color: white;
+  font-weight: bold;
+}
+
+.sidebar .MuiListItem-root {
+  color: white;
+}
+
+.sidebar .MuiListItemIcon-root {
+  color: white;
+}

@@ -1,0 +1,17 @@
+.events-page {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+.event-form {
+  margin-top: 20px;
+  max-width: 500px;
+}
+
+.events-grid {
+  margin-top: 20px;
+}
+
+.event-card {
+  padding: 20px;
+}

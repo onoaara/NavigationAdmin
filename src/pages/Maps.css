@@ -1,0 +1,56 @@
+.maps-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.maps-title {
+  margin-bottom: 20px;
+}
+
+.maps-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 500px;
+  padding: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+}
+
+.maps-button {
+  align-self: center;
+}
+
+.locations-list {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.list-title {
+  margin-bottom: 10px;
+}
+
+.location-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.location-item:last-child {
+  border-bottom: none;
+}
+
+.location-item .MuiListItemText-root {
+  margin-right: 20px;
+}
+
+.location-item .MuiIconButton-root {
+  color: #007bff;
+}

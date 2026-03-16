@@ -1,0 +1,17 @@
+.photo-gallery-page {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+.photo-form {
+  margin-top: 20px;
+  max-width: 500px;
+}
+
+.photos-grid {
+  margin-top: 20px;
+}
+
+.photo-card {
+  padding: 20px;
+}

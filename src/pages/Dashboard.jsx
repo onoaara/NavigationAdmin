@@ -13,6 +13,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import DashboardWidget from "../components/DashboardWidget";
+import GroupIcon from "@mui/icons-material/Group";
+import PersonCheckIcon from "@mui/icons-material/PersonAdd";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -57,9 +60,24 @@ const Dashboard = () => {
     <div className="dashboard">
       <h2>Dashboard</h2>
       <div className="widgets-container">
-        <DashboardWidget title="Total Users" value={totalUsers.toString()} />
-        <DashboardWidget title="Active Users" value={activeUsers.toString()} />
-        <DashboardWidget title="New Signups" value="-" />
+        <DashboardWidget
+          title="Total Users"
+          value={totalUsers.toString()}
+          icon={<GroupIcon />}
+          color="#3f51b5"
+        />
+        <DashboardWidget
+          title="Active Users"
+          value={activeUsers.toString()}
+          icon={<PersonCheckIcon />}
+          color="#4caf50"
+        />
+        <DashboardWidget
+          title="New Signups"
+          value="-"
+          icon={<TrendingUpIcon />}
+          color="#ff9800"
+        />
       </div>
       <div className="charts-container">
         <div className="chart">

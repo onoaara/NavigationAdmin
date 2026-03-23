@@ -1,34 +1,54 @@
-/* .dashboard-widget h3 {
-  margin: 0 0 10px;
-  font-size: 1.2em;
-}
-
-.dashboard-widget p {
-  margin: 0;
-  font-size: 2em;
-  font-weight: bold;
-} */
-
-/* DashboardWidget.css */
-
 .dashboard-widget {
   background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 24px;
   flex: 1;
-  min-width: 200px;
-  max-width: 300px;
-  text-align: center;
+  min-width: 240px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-widget:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.widget-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.widget-icon svg {
+  font-size: 28px;
+}
+
+.widget-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard-widget h3 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #007bff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .dashboard-widget p {
-  font-size: 1.2em;
-  color: #6c757d;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 4px 0 0 0;
+  color: #2c387e;
 }

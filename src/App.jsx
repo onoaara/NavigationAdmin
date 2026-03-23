@@ -15,6 +15,7 @@ import PopularPlaces from "./pages/PopularPlaces";
 import PhotoGalleryAdmin from "./pages/PhotoGalleryAdmin";
 import Navbar from "./components/NavBar";
 import Maps from "./pages/Maps";
+import { Toaster } from "sonner";
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -28,6 +29,7 @@ const App = () => {
 
   return (
     <Router>
+      <Toaster position="top-right" richColors />
       <div style={{ display: "flex" }}>
         {authenticated && <Sidebar />}
         <div style={{ flex: 1 }}>

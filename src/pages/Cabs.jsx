@@ -10,17 +10,25 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
-  Card,
-  CardContent,
-  CardMedia,
+  Paper,
   Typography,
-  Grid,
   Button,
   Modal,
   Box,
   TextField,
   CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Avatar,
+  IconButton,
 } from "@mui/material";
+import { toast } from "sonner";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import "./Cabs.css";
 
 const Cabs = () => {
@@ -44,37 +52,52 @@ const Cabs = () => {
   }, []);
 
   const handleAddCab = async (cab) => {
-    const cabsCollection = collection(db, "cabs");
-    await addDoc(cabsCollection, cab);
-    const cabsSnapshot = await getDocs(cabsCollection);
-    const cabsList = cabsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setCabs(cabsList);
-    setIsAddModalOpen(false);
+    try {
+      const cabsCollection = collection(db, "cabs");
+      await addDoc(cabsCollection, cab);
+      const cabsSnapshot = await getDocs(cabsCollection);
+      const cabsList = cabsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCabs(cabsList);
+      setIsAddModalOpen(false);
+      toast.success("Cab added successfully!");
+    } catch (error) {
+      toast.error("Error adding cab: " + error.message);
+    }
   };
 
   const handleEditCab = async (updatedCab) => {
-    const cabDoc = doc(db, "cabs", currentCab.id);
-    await updateDoc(cabDoc, updatedCab);
-    const cabsSnapshot = await getDocs(collection(db, "cabs"));
-    const cabsList = cabsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setCabs(cabsList);
-    setIsEditModalOpen(false);
+    try {
+      const cabDoc = doc(db, "cabs", currentCab.id);
+      await updateDoc(cabDoc, updatedCab);
+      const cabsSnapshot = await getDocs(collection(db, "cabs"));
+      const cabsList = cabsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCabs(cabsList);
+      setIsEditModalOpen(false);
+      toast.success("Cab updated successfully!");
+    } catch (error) {
+      toast.error("Error updating cab: " + error.message);
+    }
   };
 
   const handleDeleteCab = async (cabId) => {
-    await deleteDoc(doc(db, "cabs", cabId));
-    const cabsSnapshot = await getDocs(collection(db, "cabs"));
-    const cabsList = cabsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setCabs(cabsList);
+    try {
+      await deleteDoc(doc(db, "cabs", cabId));
+      const cabsSnapshot = await getDocs(collection(db, "cabs"));
+      const cabsList = cabsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCabs(cabsList);
+      toast.success("Cab deleted successfully!");
+    } catch (error) {
+      toast.error("Error deleting cab: " + error.message);
+    }
   };
 
   return (
@@ -96,56 +119,55 @@ const Cabs = () => {
           Add Cab
         </Button>
       </div>
-      <Grid container spacing={3} className="cabs-grid">
-        {cabs.map((cab) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={cab.id}>
-            <Card className="cab-card">
-              <CardMedia
-                component="img"
-                height="200"
-                image={cab.image}
-                alt={cab.name}
-                className="cab-image"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {cab.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Phone: {cab.phoneNumber}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Car Model: {cab.carModel}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Plate Number: {cab.plateNumber}
-                </Typography>
-                <div className="card-buttons">
-                  <Button
-                    size="small"
+      <TableContainer component={Paper} elevation={0} sx={{ mt: 3 }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell>Image</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>Car Model</TableCell>
+              <TableCell>Plate Number</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {cabs.map((cab) => (
+              <TableRow key={cab.id} hover>
+                <TableCell>
+                  <Avatar
+                    src={cab.image}
+                    alt={cab.name}
+                    variant="rounded"
+                    sx={{ width: 50, height: 50 }}
+                  />
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>{cab.name}</TableCell>
+                <TableCell>{cab.phoneNumber}</TableCell>
+                <TableCell>{cab.carModel}</TableCell>
+                <TableCell>{cab.plateNumber}</TableCell>
+                <TableCell align="right">
+                  <IconButton
                     color="primary"
-                    variant="contained"
                     onClick={() => {
                       setCurrentCab(cab);
                       setIsEditModalOpen(true);
                     }}
                   >
-                    Edit
-                  </Button>
-                  <Button
-                    size="small"
-                    color="secondary"
-                    variant="contained"
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    color="error"
                     onClick={() => handleDeleteCab(cab.id)}
                   >
-                    Delete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <AddEditCabModal
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}

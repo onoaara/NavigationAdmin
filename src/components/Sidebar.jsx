@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   List,
   ListItem,
@@ -14,59 +14,43 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import PlaceIcon from "@mui/icons-material/Place";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import "./Sidebar.css";
 
 const Sidebar = () => {
+  const location = useLocation();
+
+  const menuItems = [
+    { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
+    { text: "Users", icon: <PeopleIcon />, path: "/users" },
+    { text: "Cabs", icon: <DirectionsCarIcon />, path: "/cabs" },
+    { text: "Events", icon: <EventIcon />, path: "/events" },
+    { text: "Popular Places", icon: <PlaceIcon />, path: "/popular-places" },
+    { text: "Photo Gallery", icon: <PhotoLibraryIcon />, path: "/photo-gallery" },
+    { text: "Maps", icon: <SettingsIcon />, path: "/maps" },
+  ];
+
   return (
     <div className="sidebar">
       <Box className="sidebar-header">
+        <AdminPanelSettingsIcon className="sidebar-logo-icon" />
         <Typography variant="h5" className="sidebar-logo">
-          Admin
+          Navigation Admin
         </Typography>
       </Box>
-      <List>
-        <ListItem button component={Link} to="/">
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </ListItem>
-        <ListItem button component={Link} to="/users">
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Users" />
-        </ListItem>
-        <ListItem button component={Link} to="/cabs">
-          <ListItemIcon>
-            <DirectionsCarIcon />
-          </ListItemIcon>
-          <ListItemText primary="Cabs" />
-        </ListItem>
-        <ListItem button component={Link} to="/events">
-          <ListItemIcon>
-            <EventIcon />
-          </ListItemIcon>
-          <ListItemText primary="Events" />
-        </ListItem>
-        <ListItem button component={Link} to="/popular-places">
-          <ListItemIcon>
-            <PlaceIcon />
-          </ListItemIcon>
-          <ListItemText primary="Popular Places" />
-        </ListItem>
-        <ListItem button component={Link} to="/photo-gallery">
-          <ListItemIcon>
-            <PhotoLibraryIcon />
-          </ListItemIcon>
-          <ListItemText primary="Photo Gallery" />
-        </ListItem>
-        <ListItem button component={Link} to="/maps">
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Maps" />
-        </ListItem>
+      <List className="sidebar-list">
+        {menuItems.map((item) => (
+          <ListItem
+            key={item.text}
+            button
+            component={Link}
+            to={item.path}
+            className={`sidebar-item ${location.pathname === item.path ? "active" : ""}`}
+          >
+            <ListItemIcon className="sidebar-icon">{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} className="sidebar-text" />
+          </ListItem>
+        ))}
       </List>
     </div>
   );

@@ -14,16 +14,20 @@ import {
   Box,
   Typography,
   Paper,
-  List,
-  ListItem,
-  ListItemText,
   IconButton,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
+import { toast } from "sonner";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "./Maps.css";
@@ -51,11 +55,11 @@ const Maps = () => {
       setName("");
       setLatitude("");
       setLongitude("");
-      alert("Location added successfully!");
+      toast.success("Location added successfully!");
       fetchLocations();
     } catch (error) {
       console.error("Error adding document: ", error);
-      alert("Error adding location");
+      toast.error("Error adding location");
     }
   };
 
@@ -71,22 +75,22 @@ const Maps = () => {
 
       setOpen(false);
       setCurrentLocation(null);
-      alert("Location updated successfully!");
+      toast.success("Location updated successfully!");
       fetchLocations();
     } catch (error) {
       console.error("Error updating document: ", error);
-      alert("Error updating location");
+      toast.error("Error updating location");
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, "locations", id));
-      alert("Location deleted successfully!");
+      toast.success("Location deleted successfully!");
       fetchLocations();
     } catch (error) {
       console.error("Error deleting document: ", error);
-      alert("Error deleting location");
+      toast.error("Error deleting location");
     }
   };
 
@@ -152,34 +156,43 @@ const Maps = () => {
         <Typography variant="h5" className="list-title">
           Locations List
         </Typography>
-        <List>
-          {locations.map((location) => (
-            <ListItem key={location.id} className="location-item">
-              <ListItemText
-                primary={location.name}
-                secondary={
-                  location.coordinates
-                    ? `Latitude: ${location.coordinates.lat}, Longitude: ${location.coordinates.lng}`
-                    : "Coordinates not available"
-                }
-              />
-              <IconButton
-                edge="end"
-                aria-label="edit"
-                onClick={() => handleEdit(location)}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => handleDelete(location.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </ListItem>
-          ))}
-        </List>
+        <TableContainer component={Paper} elevation={0} className="locations-table-container">
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Latitude</TableCell>
+                <TableCell>Longitude</TableCell>
+                <TableCell align="right">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {locations.map((location) => (
+                <TableRow key={location.id} hover>
+                  <TableCell fontWeight="bold">{location.name}</TableCell>
+                  <TableCell>{location.coordinates?.lat || "N/A"}</TableCell>
+                  <TableCell>{location.coordinates?.lng || "N/A"}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      color="primary"
+                      size="small"
+                      onClick={() => handleEdit(location)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      size="small"
+                      onClick={() => handleDelete(location.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Edit Location</DialogTitle>

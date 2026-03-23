@@ -13,10 +13,17 @@ import {
   TextField,
   Box,
   Typography,
-  Grid,
-  Card,
-  CardContent,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
 } from "@mui/material";
+import { toast } from "sonner";
+import DeleteIcon from "@mui/icons-material/Delete";
 import "./Events.css";
 
 const Events = () => {
@@ -60,8 +67,10 @@ const Events = () => {
       setEventName("");
       setEventDate("");
       setEventTime("");
+      toast.success("Event added successfully!");
     } catch (error) {
       console.error("Error adding event: ", error);
+      toast.error("Error adding event");
     }
   };
 
@@ -74,8 +83,10 @@ const Events = () => {
         ...doc.data(),
       }));
       setEvents(eventsList);
+      toast.success("Event deleted successfully!");
     } catch (error) {
       console.error("Error deleting event: ", error);
+      toast.error("Error deleting event");
     }
   };
 
@@ -130,34 +141,37 @@ const Events = () => {
           Add Event
         </Button>
       </Box>
-      <Grid container spacing={3} className="events-grid" sx={{ mt: 4 }}>
-        {events.map((event) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={event.id}>
-            <Card className="event-card">
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {event.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Date:{" "}
+      <TableContainer component={Paper} sx={{ mt: 4 }} elevation={0}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell>Event Name</TableCell>
+              <TableCell>Date & Time</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {events.map((event) => (
+              <TableRow key={event.id} hover>
+                <TableCell sx={{ fontWeight: "bold" }}>{event.name}</TableCell>
+                <TableCell>
                   {event.date
                     ? new Date(event.date.seconds * 1000).toLocaleString()
                     : "No date provided"}
-                </Typography>
-                <Button
-                  size="small"
-                  color="secondary"
-                  variant="contained"
-                  onClick={() => handleDeleteEvent(event.id)}
-                  sx={{ mt: 2 }}
-                >
-                  Delete
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDeleteEvent(event.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
